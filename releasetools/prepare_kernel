@@ -19,12 +19,20 @@ if __name__ == "__main__":
         with open(kernel_config_file) as kernel:
             for line in kernel.readlines():
                 if line.startswith("CONFIG_LOCALVERSION"):
-                    temp, version = line[:-1].split('-v')
-                    version.strip()
-                    if version.endswith('"'):
-                       #TODO replace with a proper reg exp instead of this ugly stuff
-                        version = version[:-1]
-                    break
+                    try:
+                        atest,btest=line[:-1].split('-v')
+                    except:
+                        temp = line
+                        version = "1"
+                        print "WARNING: Version not found. Setting Manually."
+                        break
+                    else:
+                        temp, version = line[:-1].split('-v')
+                        version.strip()
+                        if version.endswith('"'):
+                           #TODO replace with a proper reg exp instead of this ugly stuff
+                            version = version[:-1]
+                        break
     with open(os.path.join(prebuild_folder, "manifest.mf")) as source_manifest:
         with open(os.path.join(product_out_directory, "manifest.mf"), "w") as manifest:
             for line in source_manifest.readlines():
